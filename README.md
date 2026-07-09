@@ -12,6 +12,21 @@ witness-check analyze  spec.json            # PASS, or FAIL + collision pair
 witness-check minimize spec.json            # smallest sufficient field subset, or an honest "none"
 ```
 
+## Part of the Seal family
+
+witness-check is the **sufficiency analyzer** beneath the Seal assurance tools. Where `seal verify`
+checks that a decision receipt is well-formed, canonical, and untampered, witness-check answers the
+prior question: does the receipt's *field set* carry enough to justify the claim it makes? A receipt
+can be perfectly valid and still commit too little to identify what it authorizes — that gap is a
+collision, and this tool finds it.
+
+It has already earned its keep on the family (see the worked example below): it proved Seal's pre-v2
+approval surface insufficient to authorize its own effect, and showed that receipt-schema-v2's
+`args_hash` is the field that closes the gap.
+
+Family repositories: `seal-host`, `seal-check`, `seal-assurance-kit`, `seal-live-demo`. This tool is
+private and proprietary, in line with the rest of the family.
+
 ## Why a collision is stronger than a fuzzer finding
 
 A fuzzer finding says: *this implementation* has a bug. A collision says: **the field set itself is
@@ -141,5 +156,6 @@ Exit codes: `analyze` 0 = no collision, 1 = collision, 2 = bad input. `minimize`
 
 ## License
 
-MIT. The cited theorems remain in attention-lean (MIT), which this repository references and never
-modifies.
+Proprietary. Copyright (c) 2026 velvetmonkey. All rights reserved. See LICENSE. Part of the private
+Seal family. The cited theorems remain in the public [attention-lean](https://github.com/velvetmonkey/attention-lean)
+(MIT), which this repository references and never modifies.
