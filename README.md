@@ -24,8 +24,18 @@ It has already earned its keep on the family (see the worked example below): it 
 approval surface insufficient to authorize its own effect, and showed that receipt-schema-v2's
 `args_hash` is the field that closes the gap.
 
-Family repositories: `seal-host`, `seal-check`, `seal-assurance-kit`, `seal-live-demo`. This tool is
-private and proprietary, in line with the rest of the family.
+One question each across the receipt toolset:
+
+| question | tool |
+|---|---|
+| Is this receipt well-formed, canonical, and re-derivable? | `seal verify` (seal-assurance-kit) |
+| Does the field set carry **enough** to justify the claim? | `witness-check` — this tool |
+| What changed between two receipts — does it touch what is **authorized**? | `seal receipt-diff` (seal-assurance-kit) |
+| Gate receipts in CI | `seal-verify-action` — runs `seal verify` in GitHub Actions and fails the build on an unverifiable receipt (the sufficiency and diff checks are local tools today) |
+
+Family repositories: `seal` (umbrella: claims matrix, architecture map), `seal-host`,
+`seal-check`, `seal-assurance-kit`, `seal-live-demo`, `seal-verify-action`. This tool is
+private and proprietary; most of the family is private pending the public flip.
 
 ## Why a collision is stronger than a fuzzer finding
 
