@@ -1,0 +1,24 @@
+name: ci
+on:
+  push:
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [18, 20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm test
+      - name: fixtures behave as documented
+        run: |
+          set -e
+          # FAIL fixtures must exit 1, PASS fixtures 0 — the CLI is the gate.
+          node bin/witness-check analyze fixtures/parity3.json && exit 1 || test $? -eq 1
+          node bin/witness-check analyze fixtures/seal-approval-v0.json && exit 1 || test $? -eq 1
+          node bin/witness-check analyze fixtures/seal-approval-v2.json
+          node bin/witness-check minimize fixtures/seal-approval-v2.json

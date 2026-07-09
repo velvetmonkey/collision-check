@@ -1,0 +1,16 @@
+{
+  "name": "parity3 antipode collision (toy, known collision)",
+  "description": "Software echo of attention-lean AttentionLean/WitnessSeparation.lean §2: three basis-point indicator witnesses w_i(x) = [x = offPoint i] over the 3-cube; target = parity. The all-true point and the all-false point collide under all three witnesses (no basis point equals either), while parity separates them (1 vs 0). Expected: FAIL with collision pair index 0 (all-false) vs index 7 (all-true).",
+  "regime": "exhaustive",
+  "fields": ["w0", "w1", "w2"],
+  "states": [
+    { "fields": { "w0": false, "w1": false, "w2": false }, "target": false, "point": [false, false, false] },
+    { "fields": { "w0": true,  "w1": false, "w2": false }, "target": true,  "point": [true, false, false] },
+    { "fields": { "w0": false, "w1": true,  "w2": false }, "target": true,  "point": [false, true, false] },
+    { "fields": { "w0": false, "w1": false, "w2": true  }, "target": true,  "point": [false, false, true] },
+    { "fields": { "w0": false, "w1": false, "w2": false }, "target": false, "point": [true, true, false] },
+    { "fields": { "w0": false, "w1": false, "w2": false }, "target": false, "point": [true, false, true] },
+    { "fields": { "w0": false, "w1": false, "w2": false }, "target": false, "point": [false, true, true] },
+    { "fields": { "w0": false, "w1": false, "w2": false }, "target": true,  "point": [true, true, true] }
+  ]
+}

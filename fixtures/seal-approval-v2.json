@@ -1,0 +1,20 @@
+{
+  "name": "Seal approval schema, v2 field set (with args_hash)",
+  "description": "Same space and target as seal-approval-v0, plus the receipt-schema-v2 field args_hash = sha256 over the canonical arguments serialization (seal-check receipt-format.js canonicalJsonSha256; values below computed, not fabricated). Two MCP servers (db.execute / db2.execute) can receive byte-identical arguments, so args_hash alone must NOT suffice — the tool name is load-bearing, matching capabilityTarget(tool, parts) = stableHashParts([tool, ...parts]). Expected: PASS exhaustive; minimize returns [tool, args_hash].",
+  "regime": "exhaustive",
+  "fields": ["tool", "table", "operation", "session_id", "expiry", "nonce", "args_hash"],
+  "states": [
+    { "fields": { "tool": "db.execute", "table": "staging_deploy_audit", "operation": "insert", "session_id": "sess-01", "expiry": 1751955600, "nonce": "nc-01", "args_hash": "a0cdeec10af32cd0c8cd9273c5a727c1f163ecff462360cd60c1f521155db77a" },
+      "target": { "tool": "db.execute", "arguments": { "operation": "insert", "table": "staging_deploy_audit", "payload": { "row": "A" } } } },
+    { "fields": { "tool": "db.execute", "table": "staging_deploy_audit", "operation": "insert", "session_id": "sess-01", "expiry": 1751955600, "nonce": "nc-01", "args_hash": "932dad861f9737bbc5a9379e3ca04013b6b2066764bed3552d57d3d9f7806034" },
+      "target": { "tool": "db.execute", "arguments": { "operation": "insert", "table": "staging_deploy_audit", "payload": { "row": "B" } } } },
+    { "fields": { "tool": "db.execute", "table": "prod_customer_ledger", "operation": "delete_all", "session_id": "sess-01", "expiry": 1751955600, "nonce": "nc-02", "args_hash": "faa15216a7a0dc4988d42dc089e0cfb5d68fa8480226580cc3aacd6186546e0c" },
+      "target": { "tool": "db.execute", "arguments": { "operation": "delete_all", "table": "prod_customer_ledger", "payload": {} } } },
+    { "fields": { "tool": "db2.execute", "table": "staging_deploy_audit", "operation": "insert", "session_id": "sess-01", "expiry": 1751955600, "nonce": "nc-01", "args_hash": "a0cdeec10af32cd0c8cd9273c5a727c1f163ecff462360cd60c1f521155db77a" },
+      "target": { "tool": "db2.execute", "arguments": { "operation": "insert", "table": "staging_deploy_audit", "payload": { "row": "A" } } } },
+    { "fields": { "tool": "db2.execute", "table": "prod_customer_ledger", "operation": "delete_all", "session_id": "sess-01", "expiry": 1751955600, "nonce": "nc-02", "args_hash": "faa15216a7a0dc4988d42dc089e0cfb5d68fa8480226580cc3aacd6186546e0c" },
+      "target": { "tool": "db2.execute", "arguments": { "operation": "delete_all", "table": "prod_customer_ledger", "payload": {} } } },
+    { "fields": { "tool": "db.execute", "table": "staging_deploy_audit", "operation": "insert", "session_id": "sess-02", "expiry": 1751959200, "nonce": "nc-03", "args_hash": "a0cdeec10af32cd0c8cd9273c5a727c1f163ecff462360cd60c1f521155db77a" },
+      "target": { "tool": "db.execute", "arguments": { "operation": "insert", "table": "staging_deploy_audit", "payload": { "row": "A" } } } }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "witness-check",
+  "version": "0.1.0",
+  "description": "Witness refinement analyzer + minimal receipt compiler: do these observations carry enough information to justify this claim?",
+  "type": "module",
+  "license": "MIT",
+  "bin": { "witness-check": "bin/witness-check" },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": { "node": ">=18" }
+}

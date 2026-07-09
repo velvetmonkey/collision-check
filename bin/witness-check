@@ -1,0 +1,129 @@
+#!/usr/bin/env node
+// SPDX-License-Identifier: MIT
+// witness-check — witness refinement analyzer + minimal receipt compiler.
+//
+// One question: do these observations carry enough information to justify
+// this claim? PASS/FAIL is theorem-shaped (attention-lean:
+// witness_computable_iff_refines / witness_separation_fails) but the
+// theorems are proved THERE; this tool decides refinement over the finite
+// space it is given, nothing more. Every result states its regime.
+
+import { readFileSync } from "node:fs";
+import { validateSpec, analyze } from "../src/refine.js";
+import { minimize } from "../src/minimize.js";
+
+const USAGE = `usage:
+  witness-check analyze  <spec.json> [--fields f1,f2,...] [--json]
+  witness-check minimize <spec.json> [--json]
+
+exit codes:
+  analyze   0 = refines/no collision found   1 = collision   2 = bad input
+  minimize  0 = sufficient subset found      1 = none        2 = bad input
+
+spec: { name, regime: "exhaustive"|"sampled", fields: [..],
+        states: [{ fields: {..}, target: <json> }, ..] }
+"target" is the precomputed value of T at each state.`;
+
+function fail(msg) {
+  process.stderr.write(msg + "\n");
+  process.exit(2);
+}
+
+function regimeLine(regime, statesCount) {
+  return regime === "exhaustive"
+    ? `regime: EXHAUSTIVE — the ${statesCount} states enumerate the whole space; this result is a decision over that space, and only that space.`
+    : `regime: SAMPLED — ${statesCount} sampled states; results speak only about the sample, never the full space.`;
+}
+
+function passLine(regime, statesCount, fibres, fields) {
+  return regime === "exhaustive"
+    ? `PASS  witness map [${fields.join(", ")}] REFINES the target over the enumerated space (|S|=${statesCount}, ${fibres} witness fibres).\n      By witness_computable_iff_refines (attention-lean), the target is decidable from these fields over this space.`
+    : `PASS* no collision found in the ${statesCount}-state sample (${fibres} witness fibres) for [${fields.join(", ")}].\n      NOT a refinement claim: a collision may exist outside the sample. Enumerate the space for a decision.`;
+}
+
+function collisionBlock(c) {
+  return [
+    `FAIL  collision — the field set is INSUFFICIENT for this target over this space.`,
+    `      Any implementation reading only [${Object.keys(c.witnessValue).join(", ")}] admits this collision`,
+    `      (witness_separation_fails: no aggregator over these witness values computes the target).`,
+    `      This indicts the FIELD SET, not one implementation.`,
+    ``,
+    `      shared witness value : ${JSON.stringify(c.witnessValue)}`,
+    `      state s   (index ${c.first.index}) : ${JSON.stringify(c.first.state.fields)}`,
+    `      state s'  (index ${c.second.index}) : ${JSON.stringify(c.second.state.fields)}`,
+    `      T(s)  = ${JSON.stringify(c.firstTarget)}`,
+    `      T(s') = ${JSON.stringify(c.secondTarget)}`,
+  ].join("\n");
+}
+
+function loadSpec(path) {
+  let spec;
+  try {
+    spec = JSON.parse(readFileSync(path, "utf8"));
+  } catch (e) {
+    fail(`cannot read spec ${path}: ${e.message}`);
+  }
+  const errors = validateSpec(spec);
+  if (errors.length) fail(`invalid spec ${path}:\n  ` + errors.join("\n  "));
+  return spec;
+}
+
+const args = process.argv.slice(2);
+const cmd = args.shift();
+if (!cmd || cmd === "--help" || cmd === "-h") {
+  console.log(USAGE);
+  process.exit(cmd ? 0 : 2);
+}
+
+const json = args.includes("--json");
+const positional = args.filter((a) => !a.startsWith("--"));
+const specPath = positional[0];
+if (!specPath) fail(USAGE);
+const spec = loadSpec(specPath);
+
+if (cmd === "analyze") {
+  let fields = spec.fields;
+  const fi = args.indexOf("--fields");
+  if (fi !== -1) {
+    const v = args[fi + 1];
+    if (!v || v.startsWith("--")) fail("--fields needs a comma-separated list");
+    fields = v.split(",").map((s) => s.trim()).filter(Boolean);
+  }
+  let result;
+  try {
+    result = analyze(spec, fields);
+  } catch (e) {
+    fail(e.message);
+  }
+  if (json) {
+    console.log(JSON.stringify(result, null, 2));
+  } else {
+    console.log(`witness-check analyze  ${spec.name ?? specPath}`);
+    console.log(regimeLine(result.regime, result.statesCount));
+    console.log(result.refines ? passLine(result.regime, result.statesCount, result.fibres, result.fields)
+                               : collisionBlock(result.collision));
+  }
+  process.exit(result.refines ? 0 : 1);
+}
+
+if (cmd === "minimize") {
+  const result = minimize(spec);
+  if (json) {
+    console.log(JSON.stringify(result, null, 2));
+  } else {
+    console.log(`witness-check minimize  ${spec.name ?? specPath}`);
+    console.log(regimeLine(result.regime, result.statesCount));
+    console.log(`search: ${result.strategy}`);
+    if (result.found) {
+      const qualifier = result.regime === "exhaustive" ? "over the enumerated space" : "over the SAMPLE ONLY (not the full space)";
+      console.log(`MINIMAL sufficient field set ${qualifier}: [${result.minimalFields.join(", ")}]`);
+      console.log(`redundant for this target over this space: [${result.redundantFields.join(", ")}]`);
+    } else {
+      console.log(`NONE  ${result.note}`);
+      console.log(collisionBlock(result.collision));
+    }
+  }
+  process.exit(result.found ? 0 : 1);
+}
+
+fail(USAGE);

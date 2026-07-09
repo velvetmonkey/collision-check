@@ -1,0 +1,20 @@
+{
+  "name": "Seal approval schema, pre-v2 field set (no args_hash)",
+  "description": "T = exact request-effect identity (tool + full canonical arguments, payload included). Witness fields = what the pre-v2 grant/approval surface exposes: the live-demo grant commits stableHash([tool, table, operation]) (seal-live-demo seal-gateway/decide.cjs) plus session/expiry/nonce context. The payload is NOT committed by any field, so two different effects share every witness value. Expected: FAIL — the pre-v2 field set cannot uniquely authorize an exact effect.",
+  "regime": "exhaustive",
+  "fields": ["tool", "table", "operation", "session_id", "expiry", "nonce"],
+  "states": [
+    { "fields": { "tool": "db.execute", "table": "staging_deploy_audit", "operation": "insert", "session_id": "sess-01", "expiry": 1751955600, "nonce": "nc-01" },
+      "target": { "tool": "db.execute", "arguments": { "operation": "insert", "table": "staging_deploy_audit", "payload": { "row": "A" } } } },
+    { "fields": { "tool": "db.execute", "table": "staging_deploy_audit", "operation": "insert", "session_id": "sess-01", "expiry": 1751955600, "nonce": "nc-01" },
+      "target": { "tool": "db.execute", "arguments": { "operation": "insert", "table": "staging_deploy_audit", "payload": { "row": "B" } } } },
+    { "fields": { "tool": "db.execute", "table": "prod_customer_ledger", "operation": "delete_all", "session_id": "sess-01", "expiry": 1751955600, "nonce": "nc-02" },
+      "target": { "tool": "db.execute", "arguments": { "operation": "delete_all", "table": "prod_customer_ledger", "payload": {} } } },
+    { "fields": { "tool": "db2.execute", "table": "staging_deploy_audit", "operation": "insert", "session_id": "sess-01", "expiry": 1751955600, "nonce": "nc-01" },
+      "target": { "tool": "db2.execute", "arguments": { "operation": "insert", "table": "staging_deploy_audit", "payload": { "row": "A" } } } },
+    { "fields": { "tool": "db2.execute", "table": "prod_customer_ledger", "operation": "delete_all", "session_id": "sess-01", "expiry": 1751955600, "nonce": "nc-02" },
+      "target": { "tool": "db2.execute", "arguments": { "operation": "delete_all", "table": "prod_customer_ledger", "payload": {} } } },
+    { "fields": { "tool": "db.execute", "table": "staging_deploy_audit", "operation": "insert", "session_id": "sess-02", "expiry": 1751959200, "nonce": "nc-03" },
+      "target": { "tool": "db.execute", "arguments": { "operation": "insert", "table": "staging_deploy_audit", "payload": { "row": "A" } } } }
+  ]
+}

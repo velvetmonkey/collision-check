@@ -1,0 +1,10 @@
+{
+  "name": "undecidable target (honest none)",
+  "description": "Two approvals identical in every observable field, targets differ — e.g. a file-channel approval surface with no per-request binding, where T asks 'was THIS request the one approved?'. The full field set already collides, so no subset refines: the claim is not decidable from these fields over this space. Expected: minimize reports found=false.",
+  "regime": "exhaustive",
+  "fields": ["channel", "tool"],
+  "states": [
+    { "fields": { "channel": "file", "tool": "db.execute" }, "target": true },
+    { "fields": { "channel": "file", "tool": "db.execute" }, "target": false }
+  ]
+}
