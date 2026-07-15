@@ -1,5 +1,7 @@
 # witness-check
 
+[![ci](https://github.com/velvetmonkey/witness-check/actions/workflows/ci.yml/badge.svg)](https://github.com/velvetmonkey/witness-check/actions/workflows/ci.yml)
+
 **One question: do these observations carry enough information to justify this claim?**
 
 `witness-check` decides, over a finite space of states you enumerate (or sample), whether a set of
