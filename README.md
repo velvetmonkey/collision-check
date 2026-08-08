@@ -22,9 +22,10 @@ prior question: does the receipt's *field set* carry enough to justify the claim
 can be perfectly valid and still commit too little to identify what it authorizes — that gap is a
 collision, and this tool finds it.
 
-It has already earned its keep on the family (see the worked example below): it proved Seal's pre-v2
-approval surface insufficient to authorize its own effect, and showed that receipt-schema-v2's
-`args_hash` is the field that closes the gap.
+It has already earned its keep on the family (see the worked example below): it showed Seal's pre-v2
+approval surface insufficient to authorize its own effect — over the enumerated fixture space,
+per this tool's own honest-scope rule below — and that receipt-schema-v2's
+`args_hash` is the field that closes the gap over that space.
 
 One question each across the receipt toolset:
 
