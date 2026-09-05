@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT
-// witness-check — witness refinement analyzer + minimal receipt compiler.
+// collision-check — witness refinement analyzer + minimal receipt compiler.
 //
 // One question: do these observations carry enough information to justify
 // this claim? PASS/FAIL is theorem-shaped (attention-lean:
@@ -13,8 +13,8 @@ import { validateSpec, analyze } from "../src/refine.js";
 import { minimize } from "../src/minimize.js";
 
 const USAGE = `usage:
-  witness-check analyze  <spec.json> [--fields f1,f2,...] [--json]
-  witness-check minimize <spec.json> [--json]
+  collision-check analyze  <spec.json> [--fields f1,f2,...] [--json]
+  collision-check minimize <spec.json> [--json]
 
 exit codes:
   analyze   0 = refines/no collision found   1 = collision   2 = bad input
@@ -98,7 +98,7 @@ if (cmd === "analyze") {
   if (json) {
     console.log(JSON.stringify(result, null, 2));
   } else {
-    console.log(`witness-check analyze  ${spec.name ?? specPath}`);
+    console.log(`collision-check analyze  ${spec.name ?? specPath}`);
     console.log(regimeLine(result.regime, result.statesCount));
     console.log(result.refines ? passLine(result.regime, result.statesCount, result.fibres, result.fields)
                                : collisionBlock(result.collision));
@@ -111,7 +111,7 @@ if (cmd === "minimize") {
   if (json) {
     console.log(JSON.stringify(result, null, 2));
   } else {
-    console.log(`witness-check minimize  ${spec.name ?? specPath}`);
+    console.log(`collision-check minimize  ${spec.name ?? specPath}`);
     console.log(regimeLine(result.regime, result.statesCount));
     console.log(`search: ${result.strategy}`);
     if (result.found) {

@@ -1,23 +1,23 @@
-# witness-check
+# collision-check
 
-[![ci](https://github.com/velvetmonkey/witness-check/actions/workflows/ci.yml/badge.svg)](https://github.com/velvetmonkey/witness-check/actions/workflows/ci.yml)
+[![ci](https://github.com/velvetmonkey/collision-check/actions/workflows/ci.yml/badge.svg)](https://github.com/velvetmonkey/collision-check/actions/workflows/ci.yml)
 
 **One question: do these observations carry enough information to justify this claim?**
 
-`witness-check` decides, over a finite space of states you enumerate (or sample), whether a set of
+`collision-check` decides, over a finite space of states you enumerate (or sample), whether a set of
 observable fields — a *witness map* — carries enough information to determine a target claim. If it
 does not, it hands you the proof: a concrete **collision pair** — two states that agree on every
 witness field while the claim disagrees.
 
 ```
-witness-check analyze  spec.json            # PASS, or FAIL + collision pair
-witness-check minimize spec.json            # smallest sufficient field subset, or an honest "none"
+collision-check analyze  spec.json            # PASS, or FAIL + collision pair
+collision-check minimize spec.json            # smallest sufficient field subset, or an honest "none"
 ```
 
 ## Part of the Seal family
 
-witness-check is the **sufficiency analyzer** beneath the Seal assurance tools. Where `seal verify`
-checks that a decision receipt is well-formed, canonical, and untampered, witness-check answers the
+collision-check is the **sufficiency analyzer** beneath the Seal assurance tools. Where `seal verify`
+checks that a decision receipt is well-formed, canonical, and untampered, collision-check answers the
 prior question: does the receipt's *field set* carry enough to justify the claim it makes? A receipt
 can be perfectly valid and still commit too little to identify what it authorizes — that gap is a
 collision, and this tool finds it.
@@ -32,7 +32,7 @@ One question each across the receipt toolset:
 | question | tool |
 |---|---|
 | Is this receipt well-formed, canonical, and re-derivable? | `seal verify` (seal-assurance-kit) |
-| Does the field set carry **enough** to justify the claim? | `witness-check` — this tool |
+| Does the field set carry **enough** to justify the claim? | `collision-check` — this tool |
 | What changed between two receipts — does it touch what is **authorized**? | `seal receipt-diff` (seal-assurance-kit) |
 | Gate receipts in CI | `seal-verify-action` — runs `seal verify` in GitHub Actions and fails the build on an unverifiable receipt (the sufficiency and diff checks are local tools today) |
 
@@ -105,7 +105,7 @@ Further non-claims, on purpose:
   "secure", **not** "proven" beyond what was enumerated.
 - Authorization ≠ intent: fields sufficient to identify an effect say nothing about whether the
   effect *should* happen.
-- The target values `T(s)` are the spec author's inputs. witness-check decides whether the fields
+- The target values `T(s)` are the spec author's inputs. collision-check decides whether the fields
   determine them; it does not audit whether they are the right claim.
 
 ## Spec format
@@ -160,7 +160,7 @@ all-true/all-false antipode pair while parity separates them.
 ## Install / run / test
 
 ```
-node bin/witness-check analyze fixtures/seal-approval-v0.json
+node bin/collision-check analyze fixtures/seal-approval-v0.json
 npm test        # node --test, no dependencies, Node ≥ 18
 ```
 
