@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
-const BIN = fileURLToPath(new URL("../bin/witness-check", import.meta.url));
+const BIN = fileURLToPath(new URL("../bin/collision-check", import.meta.url));
 const FIX = (n) => fileURLToPath(new URL(`../fixtures/${n}`, import.meta.url));
 
 function run(args) {
