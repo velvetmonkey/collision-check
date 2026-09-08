@@ -1,5 +1,4 @@
 {
-  "private": true,
   "name": "collision-check",
   "version": "0.1.0",
   "description": "Witness refinement analyzer + minimal receipt compiler: do these observations carry enough information to justify this claim?",

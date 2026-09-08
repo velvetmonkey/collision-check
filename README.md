@@ -38,7 +38,7 @@ One question each across the receipt toolset:
 
 Family repositories: `seal` (umbrella: claims matrix, architecture map), `seal-host`,
 `seal-check`, `seal-assurance-kit`, `seal-live-demo`, `seal-verify-action`. This tool is
-private and proprietary; most of the family is private pending the public flip.
+part of the wider Seal family and is licensed under Apache-2.0.
 
 ## Why a collision is stronger than a fuzzer finding
 
@@ -169,6 +169,6 @@ Exit codes: `analyze` 0 = no collision, 1 = collision, 2 = bad input. `minimize`
 
 ## License
 
-Proprietary. Copyright (c) 2026 velvetmonkey. All rights reserved. See LICENSE. Part of the private
-Seal family. The cited theorems remain in the public [attention-lean](https://github.com/velvetmonkey/attention-lean)
+Licensed under Apache-2.0. Copyright (c) 2026 velvetmonkey. See LICENSE. Part of the
+wider Seal family. The cited theorems remain in the public [attention-lean](https://github.com/velvetmonkey/attention-lean)
 (MIT), which this repository references and never modifies.
