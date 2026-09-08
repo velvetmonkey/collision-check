@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: Apache-2.0
 // Witness Refinement Analyzer.
 //
 // The primitive: do these observations carry enough information to justify

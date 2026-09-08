@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: Apache-2.0
 // Canonical JSON: deterministic serialization used for witness-tuple keys and
 // target-value equality. Object keys sorted lexicographically at every depth;
 // arrays keep order. JSON scalars pass through JSON.stringify. This is an
