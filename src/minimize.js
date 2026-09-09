@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: Apache-2.0
 // Minimal Receipt Compiler.
 //
 // Given target T and candidate fields F1..Fn over a space S, find the

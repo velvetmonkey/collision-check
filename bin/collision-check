@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: Apache-2.0
 // collision-check — witness refinement analyzer + minimal receipt compiler.
 //
 // One question: do these observations carry enough information to justify
